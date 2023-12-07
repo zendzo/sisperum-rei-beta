@@ -17,10 +17,10 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Province::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Regency::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(District::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Village::class)->constrained()->cascadeOnDelete();
+            $table->char('province_id',2)->constrained()->cascadeOnDelete();
+            $table->char('regency_id', 4)->constrained()->cascadeOnDelete();
+            $table->char('district_id', 7)->constrained()->cascadeOnDelete();
+            $table->char('village_id', 10)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('id_number');
             $table->string('pob');

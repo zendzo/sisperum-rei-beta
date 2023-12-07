@@ -5,13 +5,19 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\Customer;
+use App\Models\District;
+use App\Models\Regency;
+use App\Models\Village;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Collection;
 
 class CustomerResource extends Resource
 {
@@ -23,18 +29,48 @@ class CustomerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('province_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('regency_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('district_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('village_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('province_id')
+                    ->relationship(name: 'province', titleAttribute: 'name')
+                    ->searchable()
+                    ->preload()
+                    ->afterStateUpdated(function (Set $set){
+                      $set('regency_id', null);
+                      $set('district_id', null);
+                    })
+                    ->live()
+                    ->required(),
+                Forms\Components\Select::make('regency_id')
+                    ->options(
+                          fn (Get $get): Collection => Regency::query()
+                            ->where('province_id', $get('province_id'))
+                            ->pluck('name', 'id')
+                        )
+                    ->afterStateUpdated(fn (Set $set) => $set('district_id', null))
+                    ->searchable()
+                    ->preload()
+                    ->live()
+                    ->required(),
+                Forms\Components\Select::make('district_id')
+                  ->options(
+                    fn (Get $get): Collection => District::query()
+                      ->where('regency_id', $get('regency_id'))
+                      ->pluck('name', 'id')
+                  )
+                  ->afterStateUpdated(fn (Set $set) => $set('village_id', null))
+                  ->searchable()
+                  ->preload()
+                  ->live()
+                  ->required(),
+                Forms\Components\Select::make('village_id')
+                  ->options(
+                    fn (Get $get): Collection => Village::query()
+                      ->where('district_id', $get('district_id'))
+                      ->pluck('name', 'id')
+                  )
+                  ->searchable()
+                  ->preload()
+                  ->live()
+                  ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -65,17 +101,13 @@ class CustomerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('province_id')
-                    ->numeric()
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('regency_id')
-                    ->numeric()
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('district_id')
-                    ->numeric()
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('village_id')
-                    ->numeric()
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('id_number')
