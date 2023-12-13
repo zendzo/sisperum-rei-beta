@@ -17,6 +17,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Models\Company;
+use App\Filament\Pages\Tenancy\RegisterCompany;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -26,6 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->tenant(Company::class)
+            ->tenantRegistration(RegisterCompany::class)
             ->login()
             ->colors([
                 'primary' => Color::Amber,

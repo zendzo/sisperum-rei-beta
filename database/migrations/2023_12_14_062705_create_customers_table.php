@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\District;
 use App\Models\Province;
 use App\Models\Regency;
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->char('regency_id', 4)->constrained()->cascadeOnDelete();
             $table->char('district_id', 7)->constrained()->cascadeOnDelete();
             $table->char('village_id', 10)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Company::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('id_number');
             $table->string('pob');

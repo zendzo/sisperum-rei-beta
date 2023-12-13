@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call(IndoRegionSeeder::class);
+        $this->call(SuperAdminTableSeeder::class);
     }
 }

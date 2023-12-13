@@ -4,19 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Customer extends Model
 {
     use HasFactory;
 
-    public function province() : HasOne
+    public function province(): BelongsTo
     {
-      return $this->hasOne(Province::class);  
+      return $this->belongsTo(Province::class);
     }
 
-    public function regency(): HasOne
+    public function regency(): BelongsTo
     {
-      return $this->hasOne(Regency::class);
+      return $this->belongsTo(Regency::class);
+    }
+
+    public function company(): BelongsTo
+    {
+      return $this->belongsTo(Company::class);
     }
 }
