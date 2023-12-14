@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Tenancy\EditCompany;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -28,8 +29,10 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->tenant(Company::class)
+            ->tenant(Company::class,slugAttribute: 'slug')
             ->tenantRegistration(RegisterCompany::class)
+            ->tenantProfile(EditCompany::class)
+            ->tenantRoutePrefix('company')
             ->login()
             ->colors([
                 'primary' => Color::Amber,

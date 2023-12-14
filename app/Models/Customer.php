@@ -10,6 +10,20 @@ class Customer extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+      'province_id',
+      'regency_id',
+      'district_id',
+      'village_id',
+      'name',
+      'id_number',
+      'pob',
+      'dob',
+      'address',
+      'email',
+      'phone',
+    ];
+
     public function province(): BelongsTo
     {
       return $this->belongsTo(Province::class);
